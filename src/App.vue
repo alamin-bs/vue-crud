@@ -7,22 +7,29 @@
 <script>
 import "tailwindcss/tailwind.css";
 import Tabs from "./components/Tabs.vue";
-import store from "./store";
+//import store from "./store";
 export default {
   name: "App",
-  store,
+  //store,
   components: {
     tabs: Tabs,
   },
+  data: function() {
+    return {
+      post: true,
+      a: "",
+      b: "",
+    };
+  },
   mounted() {
     if (localStorage.categoryList) {
-      store.commit(
+      this.$store.commit(
         "copyCategoryFromLocal",
         JSON.parse(localStorage.getItem("categoryList"))
       );
     }
     if (localStorage.postList) {
-      store.commit(
+      this.$store.commit(
         "copyPostFromLocal",
         JSON.parse(localStorage.getItem("postList"))
       );
@@ -30,10 +37,10 @@ export default {
   },
   computed: {
     postList: function() {
-      return store.state.postList;
+      return this.$store.state.postList;
     },
     categoryList: function() {
-      return store.state.categoryModule.categoryList;
+      return this.$store.state.categoryModule.categoryList;
     },
   },
   watch: {

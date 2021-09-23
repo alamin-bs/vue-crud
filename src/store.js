@@ -1,7 +1,6 @@
-import Vue from "vue";
-import Vuex from "vuex";
-Vue.use(Vuex);
-//let id = 0;
+
+import { createStore } from "vuex";
+
 
 
 
@@ -37,7 +36,7 @@ const categoryModule = {
       
   }
 }
-export default new Vuex.Store({
+const store = createStore({
   modules:{
     categoryModule
   },
@@ -66,4 +65,5 @@ export default new Vuex.Store({
   }
   },
   
-});
+})
+export default  store;

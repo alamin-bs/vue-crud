@@ -117,6 +117,7 @@
 <script>
 //import store from "../store";
 import Multiselect from "vue-multiselect";
+//import "vue-multiselect/dist/vue-multiselect.min.css";
 import CategoryModal from "./CategoryModal.vue";
 export default {
   //name: "regular-modal",
@@ -197,4 +198,4 @@ export default {
 };
 </script>
 
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
+<style src="vue-multiselect/dist/vue-multiselect.css"></style>
