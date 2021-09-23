@@ -1,9 +1,6 @@
 
 import { createStore } from "vuex";
 
-
-
-
 const categoryModule = {
   state: {
       categoryList:[]
@@ -29,12 +26,7 @@ const categoryModule = {
         state.categoryList.push(...payload)
       }
   },
-  getters: {
-      
-  },
-  actions: {
-      
-  }
+ 
 }
 const store = createStore({
   modules:{

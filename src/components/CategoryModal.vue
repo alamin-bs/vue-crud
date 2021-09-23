@@ -62,7 +62,6 @@
 <script>
 import store from "../store";
 export default {
-  //name: "regular-modal",
   data() {
     return {
       id: 0,

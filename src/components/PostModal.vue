@@ -115,12 +115,9 @@
 </template>
 
 <script>
-//import store from "../store";
 import Multiselect from "vue-multiselect";
-//import "vue-multiselect/dist/vue-multiselect.min.css";
 import CategoryModal from "./CategoryModal.vue";
 export default {
-  //name: "regular-modal",
   components: {
     Multiselect,
     "category-modal": CategoryModal,
@@ -173,12 +170,10 @@ export default {
         description: this.description,
       });
       this.toggleModal();
-      //this.name = "";
     },
   },
   watch: {
     currentPost() {
-      console.log("watcher");
       if (!this.isCreating) {
         this.name = this.currentPost.name;
         this.value = [...this.currentPost.categoris];

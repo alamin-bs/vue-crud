@@ -106,7 +106,6 @@ export default {
   },
   methods: {
     onPostCreate() {
-      console.log("matro hoise ");
       this.isCreating = true;
       this.currentPost = {};
       this.toggleModal();

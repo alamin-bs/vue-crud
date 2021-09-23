@@ -105,7 +105,6 @@ export default {
       this.toggleModal();
     },
     onDelete(category) {
-      console.log("delete");
       this.$store.commit("removeCategory", category);
     },
   },

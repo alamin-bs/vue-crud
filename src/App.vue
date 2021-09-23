@@ -7,10 +7,9 @@
 <script>
 import "tailwindcss/tailwind.css";
 import Tabs from "./components/Tabs.vue";
-//import store from "./store";
+
 export default {
   name: "App",
-  //store,
   components: {
     tabs: Tabs,
   },
