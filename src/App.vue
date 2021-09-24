@@ -1,18 +1,19 @@
 <template>
   <div id="app" class="container  p-12">
-    <tabs></tabs>
+    <!-- <tabs></tabs> -->
+    <router-view />
   </div>
 </template>
 
 <script>
 import "tailwindcss/tailwind.css";
-import Tabs from "./components/Tabs.vue";
+// import Tabs from "./components/Tabs.vue";
 
 export default {
   name: "App",
-  components: {
-    tabs: Tabs,
-  },
+  // components: {
+  //   tabs: Tabs,
+  // },
   data: function() {
     return {
       post: true,
