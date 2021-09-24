@@ -79,40 +79,80 @@
 
 <script>
 import Modal from "./CategoryModal.vue";
+import { computed, ref } from "vue";
+import { useStore } from "vuex";
 export default {
   components: {
     Modal,
   },
-  data() {
+  setup() {
+    const store = useStore();
+    const isCreating = ref(true);
+    const showModal = ref(false);
+    const currentCategory = ref({});
+
+    const categoryList = computed(function() {
+      return store.state.categoryModule.categoryList;
+    });
+
+    function onCategoryCreate() {
+      isCreating.value = true;
+      currentCategory.value = {};
+      toggleModal();
+    }
+
+    function toggleModal() {
+      showModal.value = !showModal.value;
+    }
+    function onEdit(category) {
+      isCreating.value = false;
+      currentCategory.value = { ...category };
+      toggleModal();
+    }
+    function onDelete(category) {
+      store.commit("removeCategory", category);
+    }
     return {
-      isCreating: true,
-      showModal: false,
-      currentCategory: {},
+      isCreating,
+      showModal,
+      currentCategory,
+      categoryList,
+      onCategoryCreate,
+      toggleModal,
+      onEdit,
+      onDelete,
     };
   },
-  methods: {
-    onCategoryCreate() {
-      this.isCreating = true;
-      this.currentCategory = {};
-      this.toggleModal();
-    },
-    toggleModal() {
-      this.showModal = !this.showModal;
-    },
-    onEdit(category) {
-      this.isCreating = false;
-      this.currentCategory = { ...category };
-      this.toggleModal();
-    },
-    onDelete(category) {
-      this.$store.commit("removeCategory", category);
-    },
-  },
-  computed: {
-    categoryList: function() {
-      return this.$store.state.categoryModule.categoryList;
-    },
-  },
+  // data() {
+  //   return {
+  //     isCreating: true,
+  //     showModal: false,
+  //     currentCategory: {},
+  //   };
+  // },
+  // methods: {
+  //   onCategoryCreate() {
+  //     this.isCreating = true;
+  //     this.currentCategory = {};
+  //     this.toggleModal();
+  //   },
+  //   toggleModal() {
+  //     this.showModal = !this.showModal;
+  //   },
+  //   onEdit(category) {
+  //     this.isCreating = false;
+  //     this.currentCategory = { ...category };
+  //     this.toggleModal();
+  //   },
+  //   onDelete(category) {
+  //     this.$store.commit("removeCategory", category);
+  //   },
+  // },
+  // computed: {
+  //   categoryList: function() {
+  //     return this.$store.state.categoryModule.categoryList;
+  //   },
+  // },
 };
 </script>
 

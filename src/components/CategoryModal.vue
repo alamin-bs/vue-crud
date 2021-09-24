@@ -60,48 +60,53 @@
 </template>
 
 <script>
-import store from "../store";
+//import store from "../store";
+import { ref, watch } from "vue";
+import { useStore } from "vuex";
 export default {
-  data() {
-    return {
-      id: 0,
-      name: "",
-      isFieldEmpty: false,
-    };
-  },
   props: {
     isCreating: Boolean,
     showModal: Boolean,
     toggleModal: Function,
     currentCategory: Object,
   },
-  methods: {
-    toggle: function() {
-      this.toggleModal();
-    },
-    onCategoryCreate: function() {
-      if (this.name) {
-        store.commit("addCategory", { id: ++this.id, name: this.name });
-        this.isFieldEmpty = false;
-        this.toggleModal();
-        this.name = "";
-      } else this.isFieldEmpty = true;
-    },
-    onCategoryUpdate: function() {
+  setup(props) {
+    const store = useStore();
+    const id = ref(0);
+    const name = ref("");
+    const isFieldEmpty = ref(false);
+
+    watch(props, function() {
+      if (!props.isCreating) name.value = props.currentCategory.name;
+      else name.value = "";
+    });
+    function toggle() {
+      props.toggleModal();
+    }
+    function onCategoryCreate() {
+      if (name.value) {
+        store.commit("addCategory", { id: ++id.value, name: name.value });
+        isFieldEmpty.value = false;
+        props.toggleModal();
+        name.value = "";
+      } else isFieldEmpty.value = true;
+    }
+    function onCategoryUpdate() {
       store.commit("editCategory", {
-        ...this.currentCategory,
-        name: this.name,
+        ...props.currentCategory,
+        name: name.value,
       });
-      this.toggleModal();
-      this.name = "";
-    },
-  },
-  watch: {
-    currentCategory() {
-      console.log("watcher");
-      if (!this.isCreating) this.name = this.currentCategory.name;
-      else this.name = "";
-    },
+      props.toggleModal();
+      name.value = "";
+    }
+    return {
+      id,
+      name,
+      isFieldEmpty,
+      toggle,
+      onCategoryCreate,
+      onCategoryUpdate,
+    };
   },
 };
 </script>

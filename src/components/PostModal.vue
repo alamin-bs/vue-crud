@@ -117,20 +117,12 @@
 <script>
 import Multiselect from "vue-multiselect";
 import CategoryModal from "./CategoryModal.vue";
+import { computed, ref, watch } from "vue";
+import { useStore } from "vuex";
 export default {
   components: {
     Multiselect,
     "category-modal": CategoryModal,
-  },
-  data() {
-    return {
-      id: 0,
-      name: "",
-      description: "",
-      value: [],
-      showCategoryModal: false,
-      isFieldEmpty: false,
-    };
   },
   props: {
     isCreating: Boolean,
@@ -138,58 +130,128 @@ export default {
     toggleModal: Function,
     currentPost: Object,
   },
-  methods: {
-    handleClick: function(e) {
-      e.preventDefault();
-      this.toggleCategoryModal();
-    },
-    toggle: function() {
-      this.toggleModal();
-    },
-    toggleCategoryModal: function() {
-      this.showCategoryModal = !this.showCategoryModal;
-    },
-    onPostCreate: function() {
-      if (this.name) {
-        this.$store.commit("addPost", {
-          id: ++this.id,
-          name: this.name,
-          description: this.description,
-          categoris: this.value,
-        });
-        this.isFieldEmpty = false;
-        this.toggleModal();
-        this.name = "";
-      } else this.isFieldEmpty = true;
-    },
-    onPostUpdate: function() {
-      this.$store.commit("editPost", {
-        id: this.currentPost.id,
-        name: this.name,
-        categoris: [...this.value],
-        description: this.description,
-      });
-      this.toggleModal();
-    },
-  },
-  watch: {
-    currentPost() {
-      if (!this.isCreating) {
-        this.name = this.currentPost.name;
-        this.value = [...this.currentPost.categoris];
-        this.description = this.currentPost.description;
+  setup(props) {
+    const store = useStore();
+    const id = ref(0);
+    const name = ref("");
+    const description = ref("");
+    const value = ref([]);
+    const showCategoryModal = ref(false);
+    const isFieldEmpty = ref(false);
+
+    const options = computed(function() {
+      return store.state.categoryModule.categoryList;
+    });
+    watch(props, function() {
+      if (!props.isCreating) {
+        name.value = props.currentPost.name;
+        value.value = [...props.currentPost.categoris];
+        description.value = props.currentPost.description;
       } else {
-        this.name = "";
-        this.value = [];
-        this.description = "";
+        name.value = "";
+        value.value = [];
+        description.value = "";
       }
-    },
+    });
+    function handleClick(e) {
+      e.preventDefault();
+      toggleCategoryModal();
+    }
+    function toggle() {
+      props.toggleModal();
+    }
+    function toggleCategoryModal() {
+      showCategoryModal.value = !showCategoryModal.value;
+    }
+    function onPostCreate() {
+      if (name.value) {
+        store.commit("addPost", {
+          id: ++id.value,
+          name: name.value,
+          description: description.value,
+          categoris: value.value,
+        });
+        isFieldEmpty.value = false;
+        props.toggleModal();
+        name.value = "";
+      } else isFieldEmpty.value = true;
+    }
+    function onPostUpdate() {
+      store.commit("editPost", {
+        id: props.currentPost.id,
+        name: name.value,
+        categoris: [...value.value],
+        description: description.value,
+      });
+      props.toggleModal();
+    }
+    return {
+      id,
+      name,
+      description,
+      value,
+      showCategoryModal,
+      isFieldEmpty,
+      options,
+      handleClick,
+      toggle,
+      toggleCategoryModal,
+      onPostCreate,
+      onPostUpdate,
+    };
   },
-  computed: {
-    options() {
-      return this.$store.state.categoryModule.categoryList;
-    },
-  },
+  // methods: {
+  //   handleClick: function(e) {
+  //     e.preventDefault();
+  //     this.toggleCategoryModal();
+  //   },
+  //   toggle: function() {
+  //     this.toggleModal();
+  //   },
+  //   toggleCategoryModal: function() {
+  //     this.showCategoryModal = !this.showCategoryModal;
+  //   },
+  //   onPostCreate: function() {
+  //     if (this.name) {
+  //       this.$store.commit("addPost", {
+  //         id: ++this.id,
+  //         name: this.name,
+  //         description: this.description,
+  //         categoris: this.value,
+  //       });
+  //       this.isFieldEmpty = false;
+  //       this.toggleModal();
+  //       this.name = "";
+  //     } else this.isFieldEmpty = true;
+  //   },
+  //   onPostUpdate: function() {
+  //     this.$store.commit("editPost", {
+  //       id: this.currentPost.id,
+  //       name: this.name,
+  //       categoris: [...this.value],
+  //       description: this.description,
+  //     });
+  //     this.toggleModal();
+  //   },
+  // },
+  // watch: {
+  //   currentPost() {
+  //     if (!this.isCreating) {
+  //       this.name = this.currentPost.name;
+  //       this.value = [...this.currentPost.categoris];
+  //       this.description = this.currentPost.description;
+  //     } else {
+  //       this.name = "";
+  //       this.value = [];
+  //       this.description = "";
+  //     }
+  //   },
+  // },
+  // computed: {
+  //   options() {
+  //     return this.$store.state.categoryModule.categoryList;
+  //   },
+  // },
 };
 </script>
 

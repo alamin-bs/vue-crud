@@ -91,48 +91,59 @@
 <script>
 import Modal from "./PostModal.vue";
 import ViewPostModal from "./ViewPostModal.vue";
+import { computed, ref } from "vue";
+import { useStore } from "vuex";
 export default {
   components: {
     Modal,
     ViewPostModal,
   },
-  data() {
+
+  setup() {
+    const store = useStore();
+    const isCreating = ref(true);
+    const showModal = ref(false);
+    const showViewModal = ref(false);
+    const currentPost = ref({});
+    const postList = computed(function() {
+      return store.state.postList;
+    });
+    function onPostCreate() {
+      isCreating.value = true;
+      currentPost.value = {};
+      toggleModal();
+    }
+    function toggleModal() {
+      showModal.value = !showModal.value;
+    }
+    function toggleViewModal() {
+      showViewModal.value = !showViewModal.value;
+    }
+    function onView(post) {
+      currentPost.value = { ...post };
+      toggleViewModal();
+    }
+    function onEdit(post) {
+      isCreating.value = false;
+      currentPost.value = { ...post };
+      toggleModal();
+    }
+    function onDelete(post) {
+      store.commit("removePost", post);
+    }
     return {
-      isCreating: true,
-      showModal: false,
-      showViewModal: false,
-      currentPost: {},
+      isCreating,
+      showModal,
+      showViewModal,
+      currentPost,
+      onPostCreate,
+      toggleModal,
+      toggleViewModal,
+      onView,
+      onEdit,
+      onDelete,
+      postList,
     };
-  },
-  methods: {
-    onPostCreate() {
-      this.isCreating = true;
-      this.currentPost = {};
-      this.toggleModal();
-    },
-    toggleModal() {
-      this.showModal = !this.showModal;
-    },
-    toggleViewModal() {
-      this.showViewModal = !this.showViewModal;
-    },
-    onView(post) {
-      this.currentPost = { ...post };
-      this.toggleViewModal();
-    },
-    onEdit(post) {
-      this.isCreating = false;
-      this.currentPost = { ...post };
-      this.toggleModal();
-    },
-    onDelete(post) {
-      this.$store.commit("removePost", post);
-    },
-  },
-  computed: {
-    postList() {
-      return this.$store.state.postList;
-    },
   },
 };
 </script>
